@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                https://github.com/sylvestersmile/Java_project.git
+                // Corrected the cloning step
+                git url: 'https://github.com/sylvestersmile/Java_project.git'
             }
         }
         stage('Build') {
