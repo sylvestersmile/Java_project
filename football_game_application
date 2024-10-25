@@ -1,0 +1,210 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Class to represent a soccer player
+class Player {
+    private String name;
+    private int number;
+    private String position;
+
+    public Player(String name, int number, String position) {
+        this.name = name;
+        this.number = number;
+        this.position = position;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "Name='" + name + '\'' +
+                ", Number=" + number +
+                ", Position='" + position + '\'' +
+                '}';
+    }
+}
+
+// Class to represent a team
+class Team {
+    private String name;
+    private List<Player> players;
+
+    public Team(String name) {
+        this.name = name;
+        this.players = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "Name='" + name + '\'' +
+                ", Players=" + players +
+                '}';
+    }
+}
+
+// Class to represent a soccer game
+class Game {
+    private Team team1;
+    private Team team2;
+    private int team1Score;
+    private int team2Score;
+
+    public Game(Team team1, Team team2) {
+        this.team1 = team1;
+        this.team2 = team2;
+        this.team1Score = 0;
+        this.team2Score = 0;
+    }
+
+    public void scoreGoal(Team team) {
+        if (team.equals(team1)) {
+            team1Score++;
+        } else if (team.equals(team2)) {
+            team2Score++;
+        }
+    }
+
+    public String getScore() {
+        return team1.getName() + " " + team1Score + " - " + team2Score + " " + team2.getName();
+    }
+
+    @Override
+    public String toString() {
+        return "Game between " + team1.getName() + " and " + team2.getName() + "\nScore: " + getScore();
+    }
+}
+
+// Main class to manage the soccer application
+public class SoccerManager {
+    private List<Team> teams;
+    private List<Game> games;
+
+    public SoccerManager() {
+        teams = new ArrayList<>();
+        games = new ArrayList<>();
+    }
+
+    public void createTeam(String name) {
+        teams.add(new Team(name));
+    }
+
+    public void addPlayerToTeam(String teamName, String playerName, int number, String position) {
+        for (Team team : teams) {
+            if (team.getName().equalsIgnoreCase(teamName)) {
+                team.addPlayer(new Player(playerName, number, position));
+                return;
+            }
+        }
+        System.out.println("Team not found!");
+    }
+
+    public void startGame(String team1Name, String team2Name) {
+        Team team1 = null;
+        Team team2 = null;
+        for (Team team : teams) {
+            if (team.getName().equalsIgnoreCase(team1Name)) {
+                team1 = team;
+            } else if (team.getName().equalsIgnoreCase(team2Name)) {
+                team2 = team;
+            }
+        }
+        if (team1 != null && team2 != null) {
+            games.add(new Game(team1, team2));
+        } else {
+            System.out.println("One or both teams not found!");
+        }
+    }
+
+    public void displayTeams() {
+        for (Team team : teams) {
+            System.out.println(team);
+        }
+    }
+
+    public void displayGames() {
+        for (Game game : games) {
+            System.out.println(game);
+        }
+    }
+
+    public static void main(String[] args) {
+        SoccerManager manager = new SoccerManager();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Soccer Manager Application!");
+        while (true) {
+            System.out.println("\n1. Create Team");
+            System.out.println("2. Add Player to Team");
+            System.out.println("3. Start Game");
+            System.out.println("4. Display Teams");
+            System.out.println("5. Display Games");
+            System.out.println("6. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter team name: ");
+                    String teamName = scanner.nextLine();
+                    manager.createTeam(teamName);
+                    break;
+                case 2:
+                    System.out.print("Enter team name: ");
+                    String tName = scanner.nextLine();
+                    System.out.print("Enter player name: ");
+                    String playerName = scanner.nextLine();
+                    System.out.print("Enter player number: ");
+                    int playerNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter player position: ");
+                    String playerPosition = scanner.nextLine();
+                    manager.addPlayerToTeam(tName, playerName, playerNumber, playerPosition);
+                    break;
+                case 3:
+                    System.out.print("Enter name of team 1: ");
+                    String team1 = scanner.nextLine();
+                    System.out.print("Enter name of team 2: ");
+                    String team2 = scanner.nextLine();
+                    manager.startGame(team1, team2);
+                    break;
+                case 4:
+                    manager.displayTeams();
+                    break;
+                case 5:
+                    manager.displayGames();
+                    break;
+                case 6:
+                    System.out.println("Exiting the application. Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
